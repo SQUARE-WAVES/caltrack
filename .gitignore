@@ -5,3 +5,5 @@ yarn-error
 .cache
 conf/
 build
+*.sublime-project
+*.sublime-workspace
