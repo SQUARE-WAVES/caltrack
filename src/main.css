@@ -36,6 +36,18 @@ div.picklist
 	margin:auto;
 }
 
+div.form_box
+{
+	text-align: left;
+	margin: auto;
+  width: 15%;
+}
+
+div.formo
+{
+	padding:.25rem;
+}
+
 table
 {
 	margin:auto;
