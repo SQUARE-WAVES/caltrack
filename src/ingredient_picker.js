@@ -1,6 +1,6 @@
 const h = require('virtual-dom/h');
 
-const TextValHook = require("./hooks.js").TextValHook
+const hooks = require("./hooks.js");
 
 const fetch_ingredients = async () => {
 	return [
@@ -74,8 +74,8 @@ const updates = (state) =>{
 			state.filter = filter_text;
 		},
 
-		"edit_name":() => {
-			state.inline_edits.name=true;
+		"edit_name":(toggle = true) => {
+			state.inline_edits.name=toggle;
 		},
 
 		"set_name":(name_txt) => {
@@ -100,20 +100,18 @@ const updates = (state) =>{
 				ing.inline_edits.grams = false;
 			},
 
-			"edit_grams":(ing) => {
-				ing.inline_edits.grams = true;
+			"edit_grams":(ing,toggle = true) => {
+				ing.inline_edits.grams = toggle;
 			},
 
-			"edit_servings":(ing) => {
-				ing.inline_edits.servings = true;
+			"edit_servings":(ing,toggle = true) => {
+				ing.inline_edits.servings = toggle;
 			}
 		}
 	}
 }
 
 const render_picklist = (state,updates) => {
-	const fh = new TextValHook(state.filter);
-
 	const filtered_ingredients = state.all_ingredients.filter( x => (x.name.toLowerCase().indexOf(state.filter.toLowerCase()) != -1));
 
 	const ingredient_entry = ingredient => h('div.p-1',{
@@ -130,7 +128,6 @@ const render_picklist = (state,updates) => {
 		h("input",{
 			"type":"text",
 			"value":state.currentFilter,
-			"txthook":fh,
 			"oninput": (ev) => updates.set_filter(ev.srcElement.value)
 		},[]),
 
@@ -146,7 +143,9 @@ const render_component = (state,updates) => {
 				h("input",{
 					"type":"number", 
 					"value":state.servings * state.serving_size_grams, 
-					"onchange": (ev) => updates.comp_row.set_grams(state,Number(ev.srcElement.value))
+					"focushook":hooks.FocusHook.instance,
+					"onchange": (ev) => updates.comp_row.set_grams(state,Number(ev.srcElement.value)),
+					"onblur":(ev) => updates.comp_row.edit_grams(state,false)
 				})
 			]);
 		}
@@ -166,7 +165,9 @@ const render_component = (state,updates) => {
 				h("input",{
 					"type":"number", 
 					"value":state.servings, 
-					"onchange": (ev) => updates.comp_row.set_servings(state,Number(ev.srcElement.value))
+					"focushook":hooks.FocusHook.instance,
+					"onchange": (ev) => updates.comp_row.set_servings(state,Number(ev.srcElement.value)),
+					"onblur":(ev) => updates.comp_row.edit_servings(state,false)
 				})
 			]);
 		}
@@ -192,16 +193,15 @@ const render_component = (state,updates) => {
 }
 
 const render_meal = (state,updates,command = nop) =>{ 
-	const fh = new TextValHook(state.name);
-
 	//the inline edit widget for the name
 	const name = ()=> {
 		if(state.inline_edits.name){
 			return h("input.cen_tx",{
 				"type":"text",
 				"value":state.name,
-				"txthook":fh,
-				"onchange": (ev) => updates.set_name(ev.srcElement.value)
+				"hook":hooks.FocusHook.instance,
+				"onchange": (ev) => updates.set_name(ev.srcElement.value),
+				"onblur":(ev) => updates.edit_name(false)
 			},[]);
 		}
 		else{
