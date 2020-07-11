@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS food_item
 CREATE TABLE IF NOT EXISTS component
 (
 	servings DOUBLE PRECISION NOT NULL,
-	meal_id UUID REFERENCES meal(id),
-	food_id UUID REFERENCES food_item(id),
+	meal_id UUID REFERENCES meal(id) ON DELETE CASCASE,
+	food_id UUID REFERENCES food_item(id) ON DELETE RESTRICT,
 	PRIMARY KEY (meal_id,food_id)
 );
 
