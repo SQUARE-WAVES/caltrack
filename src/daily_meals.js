@@ -44,13 +44,11 @@ const init = (baked_in_meals = []) => {
 	}
 }
 
-const updates = (state) => {
-
-	return {
-		add_meals: (to_add) => {
-			to_add.forEach( m => state.meals.set(m.id,m))
-			state.loading = false;
-		}
+//this is kinda dead code right now
+const updates = {
+	"add_meals": (state,to_add) => {
+		to_add.forEach( m => state.meals.set(m.id,m))
+		state.loading = false;
 	}
 }
 

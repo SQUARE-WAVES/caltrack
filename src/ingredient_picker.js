@@ -52,61 +52,59 @@ const save_state = ({name,all_ingredients}) => {
 }
 
 //you do it like this to bind the state in!
-const updates = (state) =>{
-	return {
-		"add_ingredients":(ingreedos) => {
-			const dedupe = new Set(state.all_ingredients.map(x => x.id));
-			
-			//add the new boys we can worry about sorting later
-			state.all_ingredients = ingreedos.reduce( (all,ing) => {
+const updates ={
+	"add_ingredients":(state,ingreedos) => {
+		const dedupe = new Set(state.all_ingredients.map(x => x.id));
+		
+		//add the new boys we can worry about sorting later
+		state.all_ingredients = ingreedos.reduce( (all,ing) => {
 
-				if (!dedupe.has(ing.id)){
-					all.push(format_ingredient(ing));
-				}
-
-				return all;
-			},state.all_ingredients);
-
-			state.filter = "";
-		},
-
-		"set_filter":(filter_text) => {
-			state.filter = filter_text;
-		},
-
-		"edit_name":(toggle = true) => {
-			state.inline_edits.name=toggle;
-		},
-
-		"set_name":(name_txt) => {
-			state.name = name_txt;
-			state.inline_edits.name=false;
-		},
-
-		"select":(ing)=>{
-			ing.selected = !ing.selected
-		},
-
-		"comp_row":{
-			"set_servings": (ing,servs) => {
-				ing.servings = servs;
-				ing.inline_edits.servings = false;
-				ing.inline_edits.grams = false;
-			},
-
-			"set_grams": (ing,grams) =>{
-				ing.servings = grams/ing.serving_size_grams;
-				ing.inline_edits.servings = false;
-				ing.inline_edits.grams = false;
-			},
-
-			"edit_grams":(ing,toggle = true) => {
-				ing.inline_edits.grams = toggle;
-			},
-
-			"edit_servings":(ing,toggle = true) => {
-				ing.inline_edits.servings = toggle;
+			if (!dedupe.has(ing.id)){
+				all.push(format_ingredient(ing));
 			}
+
+			return all;
+		},state.all_ingredients);
+
+		state.filter = "";
+	},
+
+	"set_filter":(state,filter_text) => {
+		state.filter = filter_text;
+	},
+
+	"edit_name":(state,toggle = true) => {
+		state.inline_edits.name=toggle;
+	},
+
+	"set_name":(state,name_txt) => {
+		state.name = name_txt;
+		state.inline_edits.name=false;
+	},
+
+	"select":(state,ing)=>{
+		ing.selected = !ing.selected
+	},
+
+	"comp_row":{
+		"set_servings": (ing,servs) => {
+			ing.servings = servs;
+			ing.inline_edits.servings = false;
+			ing.inline_edits.grams = false;
+		},
+
+		"set_grams": (ing,grams) =>{
+			ing.servings = grams/ing.serving_size_grams;
+			ing.inline_edits.servings = false;
+			ing.inline_edits.grams = false;
+		},
+
+		"edit_grams":(ing,toggle = true) => {
+			ing.inline_edits.grams = toggle;
+		},
+
+		"edit_servings":(ing,toggle = true) => {
+			ing.inline_edits.servings = toggle;
 		}
 	}
 }
@@ -118,7 +116,7 @@ const render_picklist = (state,updates) => {
 		"style":{
 			"background-color":ingredient.selected? "cyan":""
 		},
-		"onclick":(ev)=> updates.select(ingredient)
+		"onclick":(ev)=> updates.select(state,ingredient)
 	},[
 		h('label',{},ingredient.name)
 	]);
@@ -128,7 +126,7 @@ const render_picklist = (state,updates) => {
 		h("input",{
 			"type":"text",
 			"value":state.currentFilter,
-			"oninput": (ev) => updates.set_filter(ev.srcElement.value)
+			"oninput": (ev) => updates.set_filter(state,ev.srcElement.value)
 		},[]),
 
 		h("div.picklist.underline.p-4",{},filtered_ingredients.map( ingredient_entry))
@@ -200,13 +198,13 @@ const render_meal = (state,updates,command = nop) =>{
 				"type":"text",
 				"value":state.name,
 				"hook":hooks.FocusHook.instance,
-				"onchange": (ev) => updates.set_name(ev.srcElement.value),
-				"onblur":(ev) => updates.edit_name(false)
+				"onchange": (ev) => updates.set_name(state,ev.srcElement.value),
+				"onblur":(ev) => updates.edit_name(state,false)
 			},[]);
 		}
 		else{
 			return h("span.cen_tx",{
-				"onclick": (ev) => updates.edit_name()
+				"onclick": (ev) => updates.edit_name(state)
 			},[state.name]);
 		}
 	}

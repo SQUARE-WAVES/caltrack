@@ -48,19 +48,35 @@ const prog = (state,render,updates) => {
 					"Content-Type":"application/json",	
 				},
 				"body":datums
-			})
+			});
+
+			const meals = await fetch_meals();
+
+			state.daily = daily_meals.init(meals);
+			state.log = picker.init(state.log.all_ingredients);
+			state.tab = "daily";
+
+			re_render();
 		},
 
 		"save_ingredient":async (new_greedo) =>{
 			const datums = JSON.stringify(new_greedo);
-			const res = await fetch("./ingredient",{
+			await fetch("./ingredient",{
 				"method":"POST",
 				"mode":"same-origin",
 				"headers":{
 					"Content-Type":"application/json",	
 				},
 				"body":datums
-			})
+			});
+
+			const ingreeds = await fetch_greeds();
+
+			state.log = picker.init(ingreeds);
+			state.new_greed= new_ingreedient.init();
+			state.tab = "daily";
+
+			re_render();
 		}
 	}
 
@@ -94,6 +110,7 @@ const prog = (state,render,updates) => {
 const fetch_greeds = () => fetch("./ingredients").then( result => result.json())
 const fetch_meals = () => fetch(`./meals_by_date?${qs.stringify(daily_meals.date_range())}`).then(result => result.json())
 
+//basically the init! gets everything started it's its own function so it can be async
 const leadup = async () => {
 	const [ingreeds,meals] = await Promise.all([fetch_greeds(),fetch_meals()]);
 
@@ -105,9 +122,9 @@ const leadup = async () => {
 	}
 
 	const updates = {
-		"log":picker.updates(state.log),
-		"daily":daily_meals.updates(state.daily),
-		"new_greed":new_ingreedient.updates(state.new_greed),
+		"log":picker.updates,
+		"daily":daily_meals.updates,
+		"new_greed":new_ingreedient.updates,
 		"switch_tab": (tab) => {
 			state.tab = tab;
 		}
@@ -158,4 +175,3 @@ const leadup = async () => {
 }
 
 leadup();
-//do some leadup
