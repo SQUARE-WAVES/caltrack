@@ -18,6 +18,12 @@ the front end is based around a bit of code I made to kinda-sorta work like elm,
 
 the database folder just has a nice file called "setup.sql" that you can pipe directly into a postgres database and it will set things up the way this app likes. I haven't bothered figuring out a way to do non-postgres or anything more generic, but you should be able to look at that file and figure out what you want if you want to use a different DB, it's only 3 tables and a view.
 
+# what about that configuration
+the idea behind [teejay](https://github.com/SQUARE-WAVES/teejay) was to be able to have the config hosted by something like zookeeper or in a database to allow for easy customization / updating of services in flight. I haven't built that system yet so this program just loads the tj files off the hard drive. I don't commit these configuration files because they have things like passwords in them, however they are absolutely critical and actually define a lot of the features.
+
+therefore you can take a look at examples in the [wiki](https://github.com/SQUARE-WAVES/caltrack/wiki) to see how they work. The server.tj file there is almost the same as the actual config file I use in production.
+
+
 # how do I build stuff.
 
 the sever doesn't require any build processes, just install the dependencies (I use yarn for that but I think npm will work too I haven't tried.) Just start it up with '''node main.js <env conf path> <server conf path>''' those paths will default to './conf/test.tj' and './conf/server.tj' respectively.
