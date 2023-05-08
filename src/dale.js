@@ -111,7 +111,7 @@ const leadup = async () => {
 
 		const tab_val = {
 			"daily": () =>daily_meals.render(state.daily,updates.daily),
-			"new_greed": () => new_ingreedient.render(state.new_greed,updates.new_greed,command),
+			"new_greed": () => new_ingredient.render(state.new_greed,updates.new_greed,command),
 			"log": () => picker.render(state.log,updates.log,command)
 		}
 
