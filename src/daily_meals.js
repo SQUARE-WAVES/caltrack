@@ -1,6 +1,6 @@
-const h = require('virtual-dom/h');
+import {h} from "./vdprog.js"
 
-const date_range = () => {
+export const date_range = () => {
 	const start_date = new Date();
 	
 	if(start_date.getHours() <= 5) {
@@ -32,7 +32,7 @@ const date_range = () => {
 	};
 }
 
-const init = (baked_in_meals = []) => {
+export const init = (baked_in_meals = []) => {
 	const meals = baked_in_meals.reduce((acc,m) =>{
 		acc.set(m.id,m);
 		return acc;
@@ -45,7 +45,7 @@ const init = (baked_in_meals = []) => {
 }
 
 //this is kinda dead code right now
-const updates = {
+export const updates = {
 	"add_meals": (state,to_add) => {
 		to_add.forEach( m => state.meals.set(m.id,m))
 		state.loading = false;
@@ -53,7 +53,6 @@ const updates = {
 }
 
 const render_meal = (meal) =>{
-
 	return h("tr.zebra",{},[
 		h("td",{},meal.name),
 		h("td",{},`${(meal.calories).toFixed(2)}`),
@@ -65,7 +64,7 @@ const render_meal = (meal) =>{
 }
 
 //no updates or commands here, 
-const render = (state) => {
+export const render = (state) => {
 	const totals = [...state.meals.values()].reduce( (acc,meal) => {
 		acc.calories += meal.calories;
 		acc.protien += meal.protien;
@@ -79,12 +78,12 @@ const render = (state) => {
 	const meal_rows = [...state.meals.values()].map(render_meal);
 
 	const table_header = h("thead",{},[
-		h("th","name"),
-		h("th","calories"),
-		h("th","protien"),
-		h("th","carbs"),
-		h("th","fat"),
-		h("th","time")
+		h("th",{},"name"),
+		h("th",{},"calories"),
+		h("th",{},"protien"),
+		h("th",{},"carbs"),
+		h("th",{},"fat"),
+		h("th",{},"time")
 	])
 
 	const body_rows = [
@@ -100,18 +99,10 @@ const render = (state) => {
 		])
 	]
 
-
 	return h("div",{},
 		h("table",{},[
 			table_header,
 			h("tbody",{},body_rows)
 		])
 	)
-}
-
-module.exports = {
-	init,
-	render,
-	updates,
-	date_range
 }

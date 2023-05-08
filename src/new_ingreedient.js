@@ -1,5 +1,4 @@
-const h = require('virtual-dom/h');
-
+import {h} from "./vdprog.js"
 const nop = s => s
 
 const coercer = (type) => {
@@ -20,7 +19,7 @@ const inputter = (state,label,type,val,update) => h("div.formo",{},[
 	[])
 ])
 
-const render = (state,updates,command) => h("div.form_box",{},[
+export const render = (state,updates,command) => h("div.form_box",{},[
 	inputter(state,"name","text",state.name,updates.set_name),
 	inputter(state,"serving_size","number",state.serving_size,updates.set_serving_size),
 	inputter(state,"calories","number",state.calories,updates.set_cals),
@@ -30,7 +29,7 @@ const render = (state,updates,command) => h("div.form_box",{},[
 	h("button",{"onclick":(ev) => command("save_ingredient",save_state(state))},"save")
 ])
 
-const init = () => {
+export const init = () => {
 	return {
 		"name":"",
 		"serving_size":0,
@@ -44,17 +43,11 @@ const init = () => {
 //nothing for now
 const save_state = nop;
 
-const updates = {
+export const updates = {
 	"set_name":(state,val) => state.name = val,
 	"set_serving_size":(state,val) => state.serving_size = val,
 	"set_cals":(state,val) => state.calories = val,
 	"set_prot":(state,val) => state.protien = val,
 	"set_carbs":(state,val) => state.carbs = val,
 	"set_fat":(state,val) => state.fat = val
-}
-
-module.exports = {
-	init,
-	render,
-	updates
 }
