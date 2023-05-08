@@ -1,16 +1,4 @@
-const h = require('virtual-dom/h');
-
-const hooks = require("./hooks.js");
-
-const fetch_ingredients = async () => {
-	return [
-		{"id":"qer","name":"HEB Frozen Chicken Breast", "calories":110, "serving_size_grams":112, "protien":25,"carbs":0,"fat": 1},
-		{"id":"dsw","name":"HEB chicken thigh", "calories":130, "serving_size_grams":112, "protien":22,"carbs":0,"fat": 4.5},
-		{"id":"asd","name":"HCF Mozzerla", "calories":80, "serving_size_grams":28, "protien":6,"carbs":2,"fat": 6},
-		{"id":"zaz","name":"HCF Monterrey Jack", "calories":100, "serving_size_grams":28, "protien":7,"carbs":0,"fat": 8},
-		{"id":"xfnq","name":"This motherfucker has a super long ass name, like really stupid son", "calories":100, "serving_size_grams":28, "protien":7,"carbs":0,"fat": 8}
-	]
-}
+import {h} from "./vdprog.js"
 
 const nop = () => undefined;
 
@@ -26,7 +14,7 @@ const format_ingredient = (ing) => {
 	}
 }
 
-const init = (start_ingredients = []) => {
+export const init = (start_ingredients = []) => {
 	return {
 		"all_ingredients": start_ingredients.map(format_ingredient),
 		"filter":"",
@@ -52,7 +40,7 @@ const save_state = ({name,all_ingredients}) => {
 }
 
 //you do it like this to bind the state in!
-const updates ={
+export const updates ={
 	"add_ingredients":(state,ingreedos) => {
 		const dedupe = new Set(state.all_ingredients.map(x => x.id));
 		
@@ -125,7 +113,7 @@ const render_picklist = (state,updates) => {
 		h("label",{},"filter: "),
 		h("input",{
 			"type":"text",
-			"value":state.currentFilter,
+			"value":state.filter,
 			"oninput": (ev) => updates.set_filter(state,ev.srcElement.value)
 		},[]),
 
@@ -141,9 +129,15 @@ const render_component = (state,updates) => {
 				h("input",{
 					"type":"number", 
 					"value":state.servings * state.serving_size_grams, 
-					"focushook":hooks.FocusHook.instance,
 					"onchange": (ev) => updates.comp_row.set_grams(state,Number(ev.srcElement.value)),
-					"onblur":(ev) => updates.comp_row.edit_grams(state,false)
+					"onblur":(ev) => updates.comp_row.edit_grams(state,false),
+          "hooks":[
+            (node) => {
+              node.focus();
+              setTimeout(()=>node.focus(),0);
+            }
+          ]
+
 				})
 			]);
 		}
@@ -163,9 +157,14 @@ const render_component = (state,updates) => {
 				h("input",{
 					"type":"number", 
 					"value":state.servings, 
-					"focushook":hooks.FocusHook.instance,
 					"onchange": (ev) => updates.comp_row.set_servings(state,Number(ev.srcElement.value)),
-					"onblur":(ev) => updates.comp_row.edit_servings(state,false)
+					"onblur":(ev) => updates.comp_row.edit_servings(state,false),
+          "hooks":[
+            (node) => {
+              node.focus();
+              setTimeout(()=>node.focus(),0);
+            }
+          ]
 				})
 			]);
 		}
@@ -197,9 +196,14 @@ const render_meal = (state,updates,command = nop) =>{
 			return h("input.cen_tx",{
 				"type":"text",
 				"value":state.name,
-				"hook":hooks.FocusHook.instance,
 				"onchange": (ev) => updates.set_name(state,ev.srcElement.value),
-				"onblur":(ev) => updates.edit_name(state,false)
+				"onblur":(ev) => updates.edit_name(state,false),
+				"hooks":[
+          (node) => {
+            node.focus();
+            setTimeout(()=>node.focus(),0);
+          }
+        ]
 			},[]);
 		}
 		else{
@@ -210,13 +214,13 @@ const render_meal = (state,updates,command = nop) =>{
 	}
 
 	const table_header = h("thead",{},[
-		h("th","name"),
-		h("th","calories"),
-		h("th","protien"),
-		h("th","carbs"),
-		h("th","fat"),
-		h("th","servings"),
-		h("th","grams")
+		h("th",{},"name"),
+		h("th",{},"calories"),
+		h("th",{},"protien"),
+		h("th",{},"carbs"),
+		h("th",{},"fat"),
+		h("th",{},"servings"),
+		h("th",{},"grams")
 	])
 
 	const comps = state.all_ingredients.filter( x=> x.selected)
@@ -253,7 +257,7 @@ const render_meal = (state,updates,command = nop) =>{
 
 	const widgets = [
 		name(),
-		h("div.p-4","meal components"),
+		h("div.p-4",{},"meal components"),
 		table
 	]
 
@@ -268,14 +272,7 @@ const render_meal = (state,updates,command = nop) =>{
 	return widgets;
 }
 
-const render = (state,updates,command = nop) => h("div.p-4",{},[
+export const render = (state,updates,command = nop) => h("div.p-4",{},[
 	...render_picklist(state,updates),
 	...render_meal(state,updates,command)
 ])
-
-module.exports = {
-	fetch_ingredients,
-	init,
-	updates,
-	render
-}
