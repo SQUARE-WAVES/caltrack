@@ -28,13 +28,4 @@ therefore you can take a look at examples in the [wiki](https://github.com/SQUAR
 
 the sever doesn't require any build processes, just install the dependencies (I use yarn for that but I think npm will work too I haven't tried.) Just start it up with '''node main.js <env conf path> <server conf path>''' those paths will default to './conf/test.tj' and './conf/server.tj' respectively.
 
-the command I use to build the front end is: 
-```
-rm -rf ./dist
-./node_modules/parcel-bundler/bin/cli.js build $1 --public-url "./"
-```
-
-the "public url" parameter is for formatting the links in the frontend files, so you could potentially do them non-relative or something. I'm not sure if this is "best practices" with parcel or whatever but it gets the job done for me. I version the dist folder because I just deploy it as is.
-
-as above to set up the database, just run that setup file.
-
+the front end no longer requires a build step, it's just raw html and javascript classic "open web" style, the whole system is small so there isn't much need for minifying or doing anything fancy yet.
