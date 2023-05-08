@@ -11,58 +11,7 @@ const fetch_greeds = () => fetch("./ingredients").then( result => result.json())
 const fetch_meals = () => fetch(`./meals_by_date?${qs_stringify(daily_meals.date_range())}`).then(result => result.json())
 
 
-const command_table = {
-  "log_meal": async (meal_data) => {
-	  const datums = JSON.stringify(meal_data);
-	  const res = await fetch("./meal",{
-      "method":"POST",
-	  	"mode":"same-origin",
-	  	"headers":{
-	  	  "Content-Type":"application/json",	
-	  	},
-	    "body":datums
-    });
 
-	  const meals = await fetch_meals();
-
-	  state.daily = daily_meals.init(meals);
-	  state.log = picker.init(state.log.all_ingredients);
-	  state.tab = "daily";
-
-	  re_render();
-  },
-
-	"save_ingredient":async (new_greedo) =>{
-	  const datums = JSON.stringify(new_greedo);
-		await fetch("./ingredient",{
-		  "method":"POST",
-			"mode":"same-origin",
-			"headers":{
-				"Content-Type":"application/json",	
-			},
-			"body":datums
-		});
-
-		const ingreeds = await fetch_greeds();
-
-		state.log = picker.init(ingreeds);
-		state.new_greed= new_ingreedient.init();
-		state.tab = "daily";
-
-		re_render();
-	}
-}
-
-const command = async (cm,...args) => {
-  const to_exc = command_table[cm];
-
-  if(to_exc === undefined){
-	  console.log(`unknown command ${cm}`)
-		return;
-	}
-		
-	await to_exc(...args);
-}
 
 const leadup = async () => {
 	const [ingreeds,meals] = await Promise.all([fetch_greeds(),fetch_meals()]);
@@ -82,6 +31,59 @@ const leadup = async () => {
 			state.tab = tab;
 		}
 	};
+
+  const command_table = {
+    "log_meal": async (meal_data) => {
+	    const datums = JSON.stringify(meal_data);
+	    const res = await fetch("./meal",{
+        "method":"POST",
+	  	  "mode":"same-origin",
+	  	  "headers":{
+	  	    "Content-Type":"application/json",	
+	  	  },
+	      "body":datums
+      });
+
+	    const meals = await fetch_meals();
+
+	    state.daily = daily_meals.init(meals);
+	    state.log = picker.init(state.log.all_ingredients);
+	    state.tab = "daily";
+
+	    re_render();
+    },
+
+  	"save_ingredient":async (new_greedo) =>{
+  	  const datums = JSON.stringify(new_greedo);
+  		await fetch("./ingredient",{
+  		  "method":"POST",
+  			"mode":"same-origin",
+  			"headers":{
+  				"Content-Type":"application/json",	
+  			},
+  			"body":datums
+  		});
+  
+  		const ingreeds = await fetch_greeds();
+  
+  		state.log = picker.init(ingreeds);
+  		state.new_greed= new_ingreedient.init();
+  		state.tab = "daily";
+  
+  		re_render();
+  	}
+  }
+
+  const command = async (cm,...args) => {
+    const to_exc = command_table[cm];
+
+    if(to_exc === undefined){
+	    console.log(`unknown command ${cm}`)
+		  return;
+	  }
+		
+	  await to_exc(...args);
+  }
 	
 	const render = (state,updates) => {
 
@@ -124,7 +126,6 @@ const leadup = async () => {
 	};
 
   vdom_loop(document.querySelector('body'),state,updates,render).start();
-
 }
 
 leadup();
