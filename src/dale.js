@@ -67,7 +67,7 @@ const leadup = async () => {
   		const ingreeds = await fetch_greeds();
   
   		state.log = picker.init(ingreeds);
-  		state.new_greed= new_ingreedient.init();
+  		state.new_greed= new_ingredient.init();
   		state.tab = "daily";
   
   		re_render();
