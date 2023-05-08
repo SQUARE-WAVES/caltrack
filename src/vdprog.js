@@ -117,5 +117,5 @@ export const vdom_loop = (root_element,state,update_table,render) => {
     vd = new_vd;
   }
 
-  return {"start":re_render};
+  return {"go":re_render};
 }

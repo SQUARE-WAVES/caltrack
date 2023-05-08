@@ -49,8 +49,6 @@ const leadup = async () => {
 	    state.daily = daily_meals.init(meals);
 	    state.log = picker.init(state.log.all_ingredients);
 	    state.tab = "daily";
-
-	    re_render();
     },
 
   	"save_ingredient":async (new_greedo) =>{
@@ -69,8 +67,6 @@ const leadup = async () => {
   		state.log = picker.init(ingreeds);
   		state.new_greed= new_ingredient.init();
   		state.tab = "daily";
-  
-  		re_render();
   	}
   }
 
@@ -83,6 +79,7 @@ const leadup = async () => {
 	  }
 		
 	  await to_exc(...args);
+    vdl.go();
   }
 	
 	const render = (state,updates) => {
@@ -124,8 +121,10 @@ const leadup = async () => {
 			child
 		])
 	};
+  
+  const vdl = vdom_loop(document.querySelector('body'),state,updates,render)
 
-  vdom_loop(document.querySelector('body'),state,updates,render).start();
+  vdl.go();
 }
 
 leadup();
