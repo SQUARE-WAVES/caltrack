@@ -39,4 +39,19 @@ SELECT
 	(food.protien * component.servings) as protien,
 	(food.fat * component.servings) as fat,
 	(food.carbs * component.servings) as carbs
-FROM component JOIN food_item AS food ON component.food_id = food.id
+FROM component JOIN food_item AS food ON component.food_id = food.id;
+
+CREATE TABLE IF NOT EXISTS purchase
+(
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  description TEXT NOT NULL,
+  amount INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS targets
+(
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name TEXT NOT NULL,
+  settings JSONB NOT NULL DEFAULT '{}'
+);
