@@ -1,6 +1,6 @@
 const util= require("util");
 const fs = require("fs");
-const tj = require("teejay").promise;
+const tj = require("teejay");
 const tag_function = require("./lib/tag_function.js");
 
 const read_conf = util.promisify(fs.readFile)
