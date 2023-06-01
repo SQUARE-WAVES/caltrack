@@ -98,7 +98,9 @@ export const updates ={
 }
 
 const render_picklist = (state,updates) => {
-	const filtered_ingredients = state.all_ingredients.filter( x => (x.name.toLowerCase().indexOf(state.filter.toLowerCase()) != -1));
+	const filtered_ingredients = state.all_ingredients.filter( x => {
+    return (x.name.toLowerCase().indexOf(state.filter.toLowerCase()) != -1)
+  });
 
 	const ingredient_entry = ingredient => h('div.p-1',{
 		"style":{

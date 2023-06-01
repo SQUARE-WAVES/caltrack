@@ -10,9 +10,6 @@ const qs_stringify = (obj) => Object.entries(obj).map( ([k,v]) => `${encodeURICo
 const fetch_greeds = () => fetch("./ingredients").then( result => result.json())
 const fetch_meals = () => fetch(`./meals_by_date?${qs_stringify(daily_meals.date_range())}`).then(result => result.json())
 
-
-
-
 const leadup = async () => {
 	const [ingreeds,meals] = await Promise.all([fetch_greeds(),fetch_meals()]);
 
