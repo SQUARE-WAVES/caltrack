@@ -30,6 +30,15 @@ CREATE TABLE IF NOT EXISTS component
 	PRIMARY KEY (meal_id,food_id)
 );
 
+CREATE TABLE IF NOT EXISTS targets
+(
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  daily_cals DOUBLE PRECISION NOT NULL,
+  daily_protien INTEGER NOT NULL,
+  fat_percentage INTEGER NOT NULL
+);
+
+
 CREATE OR REPLACE VIEW full_component AS
 SELECT 
 	food.id as food_id, 
@@ -40,18 +49,3 @@ SELECT
 	(food.fat * component.servings) as fat,
 	(food.carbs * component.servings) as carbs
 FROM component JOIN food_item AS food ON component.food_id = food.id;
-
-CREATE TABLE IF NOT EXISTS purchase
-(
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  description TEXT NOT NULL,
-  amount INTEGER NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS targets
-(
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  name TEXT NOT NULL,
-  settings JSONB NOT NULL DEFAULT '{}'
-);

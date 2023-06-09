@@ -22,6 +22,7 @@ main(env_path,serv_path).then(
 	win => console.log("wow, we did it"),
 	fail => {
 		console.log("oh no it all went wrong")
+    console.log(fail)
 		console.log(fail.stack)
 	}
 );

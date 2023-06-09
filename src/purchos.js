@@ -8,11 +8,11 @@ const qs_stringify = (obj) => Object.entries(obj).map( ([k,v]) => `${encodeURICo
 
 const leadup = async () => {
 
-  const purchases = await weeklys.fetch_purchases(0,9999999999);
+  const purchases = await weeklys.fetch_purchases();
 
   const state = {
     "tab": "weekly",
-    "log": log_form.init(),
+    "log": log_form.init(purchases.budget_id),
     "weekly":weeklys.init(purchases)
   };
 

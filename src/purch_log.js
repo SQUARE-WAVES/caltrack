@@ -19,7 +19,7 @@ const inputter = (state,label,type,val,update) => h("div.formo",{},[
 	[])
 ])
 
-const format_state = ({desc,amt}) => ({"description":desc,"amount":amt * 100})
+const format_state = ({budget_id,desc,amt}) => ({budget_id,"description":desc,"amount":amt * 100})
 
 export const render = (state,updates,command) => h("div.form_box",{},[
   inputter(state,"description","text",state.desc,updates.set_desc),
@@ -27,8 +27,9 @@ export const render = (state,updates,command) => h("div.form_box",{},[
   h("button",{"onclick":(ev) => command("log_purchase",format_state(state))},"log")
 ]);
 
-export const init = () => {
+export const init = (budget_id) => {
   return {
+    budget_id,
     "desc":"",
     "amt":0.0
   }
