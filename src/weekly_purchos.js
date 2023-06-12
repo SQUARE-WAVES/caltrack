@@ -4,7 +4,21 @@ export const fetch_purchases = async () =>{
   const r1 = await fetch(`./budget`);
   const budge = await r1.json();
   const r2 = await fetch(`./weeklys?budget_id=${budge.id}`);
-  return await r2.json();
+  const res = await r2.json();
+
+  if(res.length === 0) {
+    return {
+      "budget_id": budge.id,
+      "weekly_allowance": budge.weekly_allowance,
+      "purchases": [],
+      "spend": 0,
+      "income": 0,
+      "remains": budge.weekly_allowance
+    }
+  }
+  else {
+    return res[0]
+  }
 }
 
 export const init = ({budget_id,weekly_allowance,purchases,spend,income,remains}) => {
