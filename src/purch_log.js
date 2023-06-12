@@ -19,7 +19,7 @@ const inputter = (state,label,type,val,update) => h("div.formo",{},[
 	[])
 ])
 
-const format_state = ({budget_id,desc,amt}) => ({budget_id,"description":desc,"amount":amt * 100})
+const format_state = ({budget_id,desc,amt}) => ({budget_id,"description":desc,"amount":Math.round(amt * 100)})
 
 export const render = (state,updates,command) => h("div.form_box",{},[
   inputter(state,"description","text",state.desc,updates.set_desc),
